@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>URL Shortener</title>
+</head>
+<body>
+  <h1>Welcome to URL Shortener</h1>
+  <form method="post" action="/users">
+    <label>Insert URL:</label>
+    <input type="text" name="url" placeholder="Insert URL" required />
+    <button type="submit">Submit</button>
+  </form>
+  <% if (shortid) { %>
+    <p>Your shortened ID is: <%= shortid %></p>
+  <% } %>
+
+  <% if (users) { %>
+    <h2>Already Registered</h2>
+    <table>
+      <thead>
+        <th><strong>Real URL :-</strong></th>
+        <th><strong>Shorten URL :-</strong></th>
+        <th><strong>Visited history :- </strong></th>
+      </thead>
+      <tbody>
+        <% users.forEach(element => { %>
+          <tr>
+            <td> <%=element.redirectUrl%></td>
+            <td><%=element.shortUrl%></td>
+            <td><%=element.totalVisits.length%></td>
+          </tr>
+       <% }) %>
+      </tbody>
+    </table>
+    <% } %>
+</body>
+</html>
