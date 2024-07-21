@@ -10,7 +10,11 @@ const url=new mongoose.Schema({
     type:String,
     required:true
   },
-  totalVisits:[{ timestamps:{type:Number} }]
+  totalVisits:[{ timestamps:{type:Number} }],
+  owner:{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:'users'
+  }
 },{timestamps:true})
 
 const URL=mongoose.model("url",url)

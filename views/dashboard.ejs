@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>URL Shortener</title>
+  <title>Dashboard</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -46,28 +46,34 @@
       background-color: #fff;
       padding: 20px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
     }
-    h1, h2 {
+    h1 {
       text-align: center;
+      color: #333;
     }
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      justify-content: center;
-      align-items: center;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
     }
-    form input, form button {
-      padding: 10px;
-      font-size: 16px;
+    th, td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: left;
     }
-    ul {
-      list-style: none;
-      padding: 0;
+    th {
+      background-color: #f4f4f4;
+      font-weight: bold;
     }
-    li {
-      padding: 10px;
-      border-bottom: 1px solid #ddd;
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    .no-data {
+      text-align: center;
+      padding: 20px;
+      font-size: 18px;
+      color: #666;
     }
   </style>
 </head>
@@ -82,22 +88,32 @@
     </ul>
   </div>
   <div class="container">
-    <h1>Welcome to URL Shortener</h1>
-    <form method="post" action="/urls">
-      <label for="url">Insert URL:</label>
-      <input type="text" id="url" name="url" placeholder="Insert URL" required />
-      <button type="submit">Submit</button>
-    </form>
-    <% if (urls.length > 0) { %>
-      <ul>
-        <% urls.forEach(url => { %>
-          <li>
-            <strong>Real URL:</strong> <%= url.redirectUrl %><br>
-            <a href="/urls/<%= url.shortUrl %>"><strong>Short URL:</strong> <%= url.shortUrl %></a><br>
-            <strong>Visited history:</strong> <%= url.totalVisits.length == 0 ? "[Not Yet Visited]" : url.totalVisits.length %>
-          </li>
-        <% }) %>
-      </ul>
+    <h1>Dashboard</h1>
+    <% if (data.length > 0) { %>
+      <h2>Already Registered URLs</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Real URL</th>
+            <th>Shorten URL</th>
+            <th>Visited History</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% data.forEach(({ user, urls }) => { %>
+            <% urls.forEach(url => { %>
+              <tr>
+                <td><%= user.name %></td>
+                <td><Strong><%= url.redirectUrl %></Strong></td>
+                <td><a href="/urls/<%= url.shortUrl %>" target="_blank"><%= url.shortUrl %></a></td>
+                <td><%= url.totalVisits.length %> visits</td>
+              </tr>
+            <% }) %>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <div class="no-data">No URLs available.</div>
     <% } %>
   </div>
 </body>

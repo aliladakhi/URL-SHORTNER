@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>URL Shortener</title>
+  <title>User Sign-up</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -47,7 +47,7 @@
       padding: 20px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
-    h1, h2 {
+    h2 {
       text-align: center;
     }
     form {
@@ -61,13 +61,11 @@
       padding: 10px;
       font-size: 16px;
     }
-    ul {
-      list-style: none;
-      padding: 0;
-    }
-    li {
-      padding: 10px;
-      border-bottom: 1px solid #ddd;
+    .auth-card {
+      margin: 20px;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
   </style>
 </head>
@@ -82,23 +80,25 @@
     </ul>
   </div>
   <div class="container">
-    <h1>Welcome to URL Shortener</h1>
-    <form method="post" action="/urls">
-      <label for="url">Insert URL:</label>
-      <input type="text" id="url" name="url" placeholder="Insert URL" required />
-      <button type="submit">Submit</button>
+    <h2>User Sign-up</h2>
+    <div class="auth-card">
+    <form method="post" action="/user/signup">
+    <div>
+    <label for="name">Name</label>
+    <input type="text" name="name" id="name" required />
+    </div>
+    <div>
+    <label for="email">E-mail</label>
+    <input type="email" name="email" id="email" required />
+    </div>
+    <div>
+    <label for="password">Password</label>
+    <input type="password" name="password" id="password" required />
+    </div>
+    <button type="submit">Submit</button>
     </form>
-    <% if (urls.length > 0) { %>
-      <ul>
-        <% urls.forEach(url => { %>
-          <li>
-            <strong>Real URL:</strong> <%= url.redirectUrl %><br>
-            <a href="/urls/<%= url.shortUrl %>"><strong>Short URL:</strong> <%= url.shortUrl %></a><br>
-            <strong>Visited history:</strong> <%= url.totalVisits.length == 0 ? "[Not Yet Visited]" : url.totalVisits.length %>
-          </li>
-        <% }) %>
-      </ul>
-    <% } %>
-  </div>
-</body>
-</html>
+    </div>
+    
+      </div>
+    </body>
+    </html>

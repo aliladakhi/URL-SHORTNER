@@ -1,9 +1,9 @@
 const express = require("express");
 const shortid = require("shortid");
 const URL = require("../Models/url");
-const userRouter = express.Router();
+const urlRouter = express.Router();
 
-userRouter
+urlRouter
   .route("")
   .post(async (req, res) => {
     const redirectUrl = req.body.url;
@@ -11,37 +11,40 @@ userRouter
       shortUrl: shortid(8),
       redirectUrl,
       totalVisits: [],
+      owner:req.user
     });
-    const users=await URL.find()
-    return res.render("../views/Home.ejs",{shortid:urlEntry.shortUrl,users});
+    const urls=await URL.find({owner:req.user})
+    return res.render("../views/Home.ejs",{urls});
   })
   .get(async (req, res) => {
-    const users = await URL.find();
-    res.render("../views/index.ejs", {users}, (err, data) => {
-      res.send(data);
-    });
-    // return res.status(200).send(users);
+    const urls = await URL.find({owner:req.user});
+   return res.render("../views/Home.ejs", {urls})
   });
 
-  userRouter.route("/:id").get(async (req, res) => {
+  urlRouter.route("/:id").get(async (req, res) => {
   const shortid = req.params.id;
-  const getUrl = await URL.findOneAndUpdate(
-    { shortUrl: shortid },
-    {
-      $push: {
-        totalVisits: { timestamps: Date.now() },
-      },
-    }
-  );
-  res.redirect(getUrl.redirectUrl);
+  try {
+    const getUrl = await URL.findOneAndUpdate(
+      { shortUrl: shortid,owner:req.user._id },
+      {
+        $push: {
+          totalVisits: { timestamps: Date.now() },
+        },
+      }
+    );
+    res.redirect(getUrl.redirectUrl);
+  } catch (error) {
+    return res.redirect("http://localhost:7000/urls");
+  }
+
 });
 
-userRouter.route("/analytic/:id").get(async (req, res) => {
+urlRouter.route("/analytic/:id").get(async (req, res) => {
   try {
     const shortid = req.params.id;
     console.log(`Fetching analytics for shortUrl: ${shortid}`);
 
-    const urlInfo = await URL.findOne({ shortUrl: shortid });
+    const urlInfo = await URL.findOne({ shortUrl: shortid,owner:req.user._id });
     console.log(`Database query result: ${urlInfo}`);
 
     if (!urlInfo) {
@@ -60,4 +63,4 @@ userRouter.route("/analytic/:id").get(async (req, res) => {
   }
 });
 
-module.exports = userRouter;
+module.exports = urlRouter;
